@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace LaminasTest\Cli\TestAsset;
 
 return [
-    'modules'                 => [],
+    'modules'                 => [
+        Module\BootstrappableModule::class,
+    ],
     'module_listener_options' => [],
     'laminas-cli'             => [
         'commands' => [

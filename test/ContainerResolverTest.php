@@ -11,8 +11,10 @@ namespace LaminasTest\Cli;
 use bovigo\vfs\vfsStream;
 use Laminas\Cli\ApplicationFactory;
 use Laminas\Cli\ContainerResolver;
+use Laminas\ModuleManager\ModuleManagerInterface;
 use Laminas\ServiceManager\ServiceManager;
 use LaminasTest\Cli\TestAsset\ExampleDependency;
+use LaminasTest\Cli\TestAsset\Module\BootstrappableModule;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -63,6 +65,13 @@ final class ContainerResolverTest extends TestCase
         $container = $resolver->resolve($input);
         self::assertInstanceOf(ServiceManager::class, $container);
         self::assertTrue($container->has(ExampleDependency::class));
+
+        /** @var ModuleManagerInterface $moduleManager */
+        $moduleManager = $container->get('ModuleManager');
+        /** @var BootstrappableModule $bootstrappableModule */
+        $bootstrappableModule = $moduleManager->getLoadedModules(false)[BootstrappableModule::class];
+
+        self::assertTrue($bootstrappableModule->wasBootstrapped());
     }
 
     public function testWillLoadContainerFromMezzioContainerPath(): void
